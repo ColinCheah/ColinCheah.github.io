@@ -196,9 +196,9 @@
             console.log("Returned place contains no geometry");
             return;
           }
-
+            console.log(place);
           var avgLng =
-            (place.geometry.viewport.Ia.hi + place.geometry.viewport.Ia.lo) / 2;
+            (place.geometry.viewport.Ja.hi + place.geometry.viewport.Ja.lo) / 2;
           var avgLat =
             (place.geometry.viewport.Va.hi + place.geometry.viewport.Va.lo) / 2;
 
@@ -249,31 +249,25 @@
       var temp_c, feelslike_c, humidity, last_update, result;
       let request = new XMLHttpRequest();
       var linkUse =
-        "http://api.weatherapi.com/v1/current.json?key=3db52d950971472cb9174854231808&q=" +
+        "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/" +
         lat +
         "," +
         lng +
-        "&aqi=yes";
+        "/today?key=2VZL29TLZTAQFTNDS9T76PUMU";
       request.open("GET", linkUse);
       request.send();
       request.onload = () => {
         console.log(request);
         if (request.status === 200) {
           result = JSON.parse(request.response);
-          console.log(result.current.condition.text);
-          console.log(result);
-          // return {
-          //   temp_c: result.current.temp_c,
-          //   feelslike_c: result.current.feelslike_c,
-          //   humidity: result.current.humidity,
-          //   last_update: result.current.last_updated,
-          // };
+          // console.log(result.current.condition.text);
+          console.log(result.currentConditions);
           setValsIntoTable(
-            result.current.temp_c,
-            result.current.feelslike_c,
-            result.current.humidity,
-            result.current.last_updated,
-            result.current.condition.text
+            convFtoC(result.currentConditions.temp),
+            convFtoC(result.currentConditions.feelslike),
+            convFtoC(result.currentConditions.humidity),
+            result.currentConditions.datetime,
+            result.currentConditions.conditions
           );
         } else console.log("error ${request.status} ${request.statusText}");
       };
@@ -295,6 +289,11 @@
       document.getElementById("humidity").innerHTML = humidity + "%";
       document.getElementById("lastupd").innerHTML = lastupdate;
       document.getElementById("condi_text").innerHTML = condi_text;
+    }
+
+    function convFtoC (temp_f){
+      var temp_c = (temp_f - 32)*(5/9);
+      return temp_c.toFixed(2);
     }
   </script>
 </html>
