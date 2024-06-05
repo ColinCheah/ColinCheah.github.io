@@ -1,0 +1,136 @@
+{
+	"1mm": {
+		"method4": {
+			"2cables": "11",
+			"3or4cables": "10.5"
+		},
+		"method3": {
+			"2cables": "13.5",
+			"3or4cables": "12"
+		},
+		"method1": {
+			"2cables": "15.5",
+			"3or4cables": "14"
+		}
+	},
+	"1.5mm": {
+		"method4": {
+			"2cables": "14.5",
+			"3or4cables": "13.5"
+		},
+		"method3": {
+			"2cables": "17.5",
+			"3or4cables": "15.5"
+		},
+		"method1": {
+			"2cables": "20",
+			"3or4cables": "18"
+		}
+	},
+    "2.5mm": {
+		"method4": {
+			"2cables": "19.5",
+			"3or4cables": "18"
+		},
+		"method3": {
+			"2cables": "24",
+			"3or4cables": "21"
+		},
+		"method1": {
+			"2cables": "27",
+			"3or4cables": "25"
+		}
+	},
+    "4mm": {
+		"method4": {
+			"2cables": "26",
+			"3or4cables": "24"
+		},
+		"method3": {
+			"2cables": "32",
+			"3or4cables": "28"
+		},
+		"method1": {
+			"2cables": "37",
+			"3or4cables": "33"
+		}
+	},
+    "6mm": {
+		"method4": {
+			"2cables": "34",
+			"3or4cables": "31"
+		},
+		"method3": {
+			"2cables": "41",
+			"3or4cables": "36"
+		},
+		"method1": {
+			"2cables": "47",
+			"3or4cables": "43"
+		}
+	},
+	"10mm": {
+		"method4": {
+			"2cables": "46",
+			"3or4cables": "42"
+		},
+		"method3": {
+			"2cables": "57",
+			"3or4cables": "50"
+		},
+		"method1": {
+			"2cables": "65",
+			"3or4cables": "59"
+		}
+	},
+	"16mm": {
+		"method4": {
+			"2cables": "61",
+			"3or4cables": "56"
+		},
+		"method3": {
+			"2cables": "76",
+			"3or4cables": "68"
+		},
+		"method1": {
+			"2cables": "87",
+			"3or4cables": "79"
+		}
+	},
+	"25mm": {
+		"method4": {
+			"2cables": "80",
+			"3or4cables": "73"
+		},
+		"method3": {
+			"2cables": "101",
+			"3or4cables": "89"
+		},
+		"method1": {
+			"2cables": "114",
+			"3or4cables": "104"
+		},
+		"method11": {
+			"2cables": "126",
+			"3or4cables": "112"
+		}
+	},
+	"35mm": {
+		"method4": {
+			"2cables": "99",
+			"3or4cables": "89"
+		},
+		"method3": {
+			"2cables": "125",
+			"3or4cables": "110"
+		},
+		"method1": {
+			"2cables": "141",
+			"3or4cables": "129"
+		},
+		"method11": {
+			"2cables": "156",
+			"3or4cables": "141"
+		}
+	}
+}
