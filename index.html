@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>CableSizer</title>
+  </head>
+  <body>
+    <label for="cableMaterial">Cable material:</label>
+    <select name="material" id="cableMaterial">
+      <option value="SC_PVC">Single-core PVC</option>
+      <option value="MC_PVC">Multi-core PVC</option>
+      <option value="SC_PVC_A">Single-core PVC, ARMOURED</option>
+      <option value="MC_PVC_A">Multi-core PVC, ARMOURED</option>
+      <option value="SC_XLPE">Single-core XLPE</option>
+      <option value="MC_XLPE">Multi-core XLPE</option>
+    </select>
+
+    <br><br>
+
+    <label for="cableNum">How many cables:</label>
+    <select name="cableNum" id="cableNum">
+      <option value="2cables">2 cables</option>
+      <option value="3or4cables">3 or 4 cables</option>
+    </select>
+
+    <br><br>
+
+    <label for="cableMount">Cable mounting method:</label>
+    <select name="method" id="cableMount">
+      <option value="method1">Clipped directly (Method 1)</option>
+      <option value="method3">Enclosed in conduit (on wall or in trunking) (Method 3)</option>
+      <option value="method4">Enclosed in conduit (thermally insulating wall) (Method 4)</option>
+      <option value="method11">Perforated cable tray (Method 11)</option>
+      <option value="method12">On cable ladder (Method 12)</option>
+    </select>
+
+    <br><br>
+
+    <label for="cableSets">How many sets:</label>
+    <select name="cableSets" id="cableSets">
+      <option value="1sets">1 set</option>
+      <option value="2sets">2 sets</option>
+      <option value="3sets">3 sets</option>
+      <option value="4sets">4 sets</option>
+    </select>
+
+    <br><br>
+
+    <label for="touchingSpaced">Touching or Spaced (Method 1 & 11 ONLY):</label>
+    <select name="touchingSpaced" id="touchingSpaced">
+      <option value="touching">Touching</option>
+      <option value="spaced">Spaced</option>
+    </select>
+
+    <br><br>
+
+    <label for="ambTemp">Ambient Temp:</label>
+    <select name="ambTemp" id="ambTemp">
+      <option value="25deg">25°</option>
+      <option value="30deg">30°</option>
+      <option value="35deg">35°</option>
+      <option value="40deg">40°</option>
+      <option value="45deg">45°</option>
+    </select>
+
+    <br><br>
+
+    <label for="cableSize">Cable size (mm²):</label>
+    <select name="cableSize" id="cableSize">
+      <option value="1mm">1mm²</option>
+      <option value="1.5mm">1.5mm²</option>
+      <option value="2.5mm">2.5mm²</option>
+      <option value="4mm">4mm²</option>
+      <option value="6mm">6mm²</option>
+      <option value="10mm">10mm²</option>
+      <option value="16mm">16mm²</option>
+      <option value="25mm">25mm²</option>
+      <option value="35mm">35mm²</option>
+    </select>
+
+    <br><br>
+
+    <label for="breakerSize">Breaker size (A):</label>
+    <input type="number" id="breakerSize" value="0"></input>
+  
+
+    <button onclick="getVal()" id="getValButton">Submit</button>
+
+    <br><br>
+
+    <h1 id="indicator"></h1>
+
+    <script>
+        var table = "./Table";
+        var tempTable = "Table4C1.json";
+        var CgTable = "Table4B1.json";
+        var cableCCCData, tempData, CgData, tempDataVal, cableCCCVal, CgDataVal, cableNeedsToCarry;
+
+        function getVal() {
+            var cableMat = document.getElementById("cableMaterial");
+            var cableNum = document.getElementById("cableNum");
+            var cableMount = document.getElementById("cableMount");
+            var cableSets = document.getElementById("cableSets");
+            var touchingSpaced = document.getElementById("touchingSpaced");
+            var ambTemp = document.getElementById("ambTemp");
+            var cableSize = document.getElementById("cableSize");
+            var breakerSize = document.getElementById("breakerSize");
+            findTable(cableMat.value, cableNum.value, cableMount.value, cableSets.value, touchingSpaced.value, ambTemp.value, cableSize.value, breakerSize.value);
+          }
+
+        function findTable(cableMat, cableNum, cableMount, cableSets, touchingSpaced, ambTemp, cableSize, breakerSize){
+          
+          if (cableMat == "SC_PVC"){
+            table = table + "4D1A.json";
+            //let cableCCCData;
+            fetchJSON(table).then((data) => {
+              cableCCCData = data;
+              console.log("cableData: "+ cableCCCData[cableSize][cableMount][cableNum]);
+              cableCCCVal = cableCCCData[cableSize][cableMount][cableNum];
+            })
+            table = "./Table"
+
+            //let tempData;
+            fetchJSON(tempTable).then((data) => {
+              tempData = data;
+              // console.log(tempData["GenPVC"][ambTemp]);
+              tempDataVal = tempData["GenPVC"][ambTemp];
+            })
+
+            fetchJSON(CgTable).then((data) => {
+              CgData = data;
+              if (cableMount == "method1" || cableMount == "method11"){
+                CgDataVal = CgData[cableMount][touchingSpaced][cableSets];
+            }
+
+              else {
+                CgDataVal = CgData[cableMount][cableSets];
+              }
+            })
+
+            // setTimeout(calcCableCCC(breakerSize, CgDataVal, tempDataVal),50);
+            setTimeout(function() {calcCableCCC(breakerSize, CgDataVal, tempDataVal, cableSets);}, 200);
+            setTimeout(function() {checkCableCap(cableNeedsToCarry, cableCCCVal);}, 400);
+          }
+
+          else if (cableMat == "MC_PVC"){
+            table = table + "4D1A.json"; //append to the correct table 
+            fetchJSON(table);
+            fetchJSON("Table4C1.json");
+            table = "./Table"
+          }
+        }
+
+        function fetchJSON(tableName, callback){
+          return fetch(tableName)
+        .then((response) => { 
+            return response.json().then((data) => {
+                //console.log(data);
+                return data;
+            }).catch((err) => {
+                //console.log(err);
+            }) 
+        });
+        }
+
+        function calcCableCCC (breakerSize, Cg, Ca, cableSets){
+          cableSets = cableSets.replace("sets","");
+          console.log(cableSets);
+          cableNeedsToCarry = (breakerSize/(Cg*Ca))/cableSets;
+          console.log(cableNeedsToCarry);
+        }
+
+        function checkCableCap(cableNeedsToCarry, cableCCCVal){
+          if (cableNeedsToCarry < cableCCCVal){
+            console.log("we good");
+            document.getElementById("indicator").innerText = "cable can be used"
+          }
+          else if (cableNeedsToCarry > cableCCCVal){
+            console.log("bruh");
+            document.getElementById("indicator").innerText = "cable cannot be used"
+          }
+
+        }
+      </script>
+  </body>
+</html>
